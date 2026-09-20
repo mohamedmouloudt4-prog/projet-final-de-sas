@@ -33,7 +33,37 @@ function validerResultat(resultat) {
   return { valide: true, message: "Résultat valide." };
 }
 
+function ajouterApprenant(apprenants, apprenant) {
+  if (!Number.isInteger(apprenant?.id)) {
+    return { succes: false, message: "L'identifiant doit être un entier." };
+  }
+
+  if (!normaliserNom(apprenant.nomComplet)) {
+    return { succes: false, message: "Le nom complet est obligatoire." };
+  }
+
+  if (!normaliserNom(apprenant.ville)) {
+    return { succes: false, message: "La ville est obligatoire." };
+  }
+
+  const existe = apprenants.some((item) => item.id === apprenant.id);
+
+  if (existe) {
+    return { succes: false, message: "Cet identifiant est déjà utilisé." };
+  }
+
+  apprenants.push({
+    id: apprenant.id,
+    nomComplet: apprenant.nomComplet.trim().replace(/\s+/g, " "),
+    ville: apprenant.ville.trim().replace(/\s+/g, " "),
+    resultats: []
+  });
+
+  return { succes: true, message: "Apprenant ajouté." };
+}
+
 module.exports = {
   normaliserNom,
-  validerResultat
+  validerResultat,
+  ajouterApprenant
 };
